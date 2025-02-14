@@ -69,6 +69,28 @@ npm run dev
 
 ### Instalación con Docker
 
+Tienes dos opciones para la instalación con Docker:
+
+#### Opción 1: Docker Compose (Recomendado para Desarrollo)
+1. Clonar el repositorio:
+```bash
+git clone https://github.com/ddarthp/scanned-pdf-to-text-extractor.git
+cd scanned-pdf-to-text-extractor
+```
+
+2. Copiar el archivo de configuración y ajustar las variables de entorno:
+```bash
+cp .env.example .env
+```
+
+3. Iniciar el servicio con Docker Compose:
+```bash
+docker compose up -d
+```
+
+El servicio estará disponible en `http://localhost:3080`.
+
+#### Opción 2: Configuración Manual de Docker
 1. Clonar el repositorio:
 ```bash
 git clone https://github.com/ddarthp/scanned-pdf-to-text-extractor.git
