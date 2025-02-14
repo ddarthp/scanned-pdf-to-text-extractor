@@ -1,50 +1,66 @@
-FROM node:18-alpine
+FROM ubuntu:22.04
 
-# Install build dependencies and Tesseract
-RUN apk add --no-cache \
+# Evitar interacciones durante la instalación de paquetes
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instalar Node.js y otras dependencias
+RUN apt-get update && apt-get install -y \
+    curl \
+    build-essential \
     python3 \
-    make \
-    g++ \
-    jpeg-dev \
-    cairo-dev \
-    giflib-dev \
-    pango-dev \
+    libjpeg-dev \
+    libcairo2-dev \
+    libgif-dev \
+    libpango1.0-dev \
     libtool \
     autoconf \
     automake \
     tesseract-ocr \
-    tesseract-ocr-data-spa \
-    # Sharp dependencies
-    vips-dev \
-    fftw-dev \
-    build-base \
-    # PDF processing dependencies
+    tesseract-ocr-spa \
+    # Sharp y PDF dependencies
+    libvips-dev \
+    libfftw3-dev \
     poppler-utils \
-    ghostscript
+    ghostscript \
+    # GraphicsMagick para conversión de PDFs
+    graphicsmagick \
+    # Limpieza
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g n \
+    && n 23.6.0 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Create app directory
+# Crear directorio de la aplicación
 WORKDIR /usr/src/app
 
-# Copy package files
-COPY package*.json ./
+# Crear usuario no root
+RUN useradd -u 1000 -m appuser && \
+    chown -R appuser:appuser /usr/src/app
 
-# Install app dependencies
-RUN npm ci --only=production
+# Crear directorio de uploads y ajustar permisos
+RUN mkdir -p uploads && \
+    chown -R appuser:appuser uploads && \
+    chmod 777 uploads
 
-# Copy app source
-COPY . .
+# Copiar archivos de package
+COPY --chown=appuser:appuser package*.json ./
 
-# Build TypeScript
+# Instalar dependencias
+RUN npm install
+
+# Copiar código fuente
+COPY --chown=appuser:appuser . .
+
+# Compilar TypeScript
 RUN npm run build
 
-# Create uploads directory
-RUN mkdir -p uploads && chown -R node:node uploads
+# Cambiar a usuario no root
+USER appuser
 
-# Switch to non-root user
-USER node
-
-# Expose port
+# Exponer puerto
 EXPOSE 3080
 
-# Start command
+# Comando de inicio
 CMD ["npm", "start"] 
