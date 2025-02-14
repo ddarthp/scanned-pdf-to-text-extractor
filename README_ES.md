@@ -32,6 +32,8 @@ Servicio de extracción de texto desde PDFs escaneados y documentos de imagen, u
 
 ## Instalación
 
+### Instalación Estándar
+
 1. Clonar el repositorio:
 ```bash
 git clone https://github.com/ddarthp/scanned-pdf-to-text-extractor.git
@@ -64,6 +66,36 @@ Para desarrollo:
 ```bash
 npm run dev
 ```
+
+### Instalación con Docker
+
+1. Clonar el repositorio:
+```bash
+git clone https://github.com/ddarthp/scanned-pdf-to-text-extractor.git
+cd scanned-pdf-to-text-extractor
+```
+
+2. Copiar el archivo de configuración y ajustar las variables de entorno:
+```bash
+cp .env.example .env
+```
+
+3. Construir la imagen Docker:
+```bash
+docker build -t scanned-pdf-to-text-extractor .
+```
+
+4. Ejecutar el contenedor:
+```bash
+docker run -d \
+  --name pdf-extractor \
+  -p 3080:3080 \
+  -v $(pwd)/uploads:/usr/src/app/uploads \
+  --env-file .env \
+  scanned-pdf-to-text-extractor
+```
+
+Nota: Para el modo Ollama, necesitas tener el servidor Ollama ejecutándose de forma separada y accesible desde el contenedor. Asegúrate de configurar la variable de entorno `OLLAMA_HOST` adecuadamente.
 
 ## Configuración
 
