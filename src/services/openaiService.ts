@@ -32,49 +32,57 @@ export class OpenAIService {
         messages: [
           {
             role: 'system',
-            content: 'Eres un experto en extracción de texto de imágenes. Tu tarea es transcribir EXACTAMENTE el texto que ves en la imagen, manteniendo el formato original.'
+            content: 'Eres un experto en extracción de texto de imágenes. Tu tarea es transcribir EXACTAMENTE el texto que ves en la imagen, manteniendo el formato original. NUNCA debes inventar o agregar información que no esté presente en la imagen.'
           },
           {
             role: 'user',
             content: [
               {
                 type: 'text',
-                text: 'Analiza esta imagen y extrae ÚNICAMENTE el texto del contenido principal del documento. IMPORTANTE:\n' +
-               '- Realiza una transcripción EXACTA del texto, manteniendo la ortografía original\n' +
-               '- NO corrijas errores ortográficos ni gramaticales\n' +
-               '- NUNCA alteres mayúsculas o minúsculas - transcribe EXACTAMENTE como aparece cada letra\n' +
-               '- EXTREMADAMENTE IMPORTANTE - Presta ESPECIAL ATENCIÓN a:\n' +
-               '  * Números de identificación (cédulas, NIT, etc.) - DEBEN ser transcritos con 100% de precisión\n' +
-               '  * Números de documentos legales y referencias\n' +
-               '  * Direcciones físicas completas\n' +
-               '  * Cualquier secuencia numérica o alfanumérica\n' +
-               '  * FECHAS en cualquier formato (DD/MM/AAAA, texto, etc.)\n' +
-               '  * Uso de mayúsculas y minúsculas en cada palabra\n\n' +
-               'IGNORA COMPLETAMENTE los siguientes elementos:\n' +
-               '- Firmas sobrepuestas sobre nombres o texto\n' +
-               '- Sellos o timbres\n' +
-               '- Números de página\n' +
-               '- Membretes o encabezados institucionales\n' +
-               '- Números de folio o registro\n' +
-               '- Marcas de agua\n' +
-               '- Firmas y sus textos asociados\n' +
-               '- Cualquier anotación manuscrita sobrepuesta\n\n' +
-               'Enfócate en extraer:\n' +
-               '- El texto principal del documento\n' +
-               '- Cláusulas y contenido sustancial\n' +
-               '- Información relevante del cuerpo del documento\n' +
-               '- TODOS los números de identificación y direcciones exactamente como aparecen\n' +
-               '- TODAS las fechas manteniendo su formato original\n\n' +
-               'REGLAS CRÍTICAS:\n' +
-               '- Si hay una firma sobrepuesta sobre un nombre, IGNORA la firma y transcribe el nombre\n' +
-               '- Si hay un número de identificación, asegúrate de transcribirlo DÍGITO por DÍGITO\n' +
-               '- Si hay texto tachado pero legible, transcríbelo e indica que está tachado\n' +
-               '- Si hay texto subrayado, transcríbelo sin indicar el subrayado\n\n' +
-               'Devuelve SOLO el texto extraído, sin comentarios adicionales ni explicaciones.\n' +
-               'RECUERDA: \n' +
-               '- La transcripción debe ser EXACTAMENTE como aparece en el documento\n' +
-               '- NO cambies NINGUNA mayúscula por minúscula o viceversa\n' +
-               '- NO omitas ni modifiques NINGÚN número de identificación, dirección o fecha'
+                text: 'REGLAS ABSOLUTAS:\n' +
+                      '- NUNCA inventes o agregues información que no esté en el documento\n' +
+                      '- NUNCA completes datos parciales o ilegibles\n' +
+                      '- Si no puedes leer algo con 100% de certeza, omítelo\n' +
+                      '- NO hagas suposiciones sobre el contenido\n\n' +
+                      'Analiza esta imagen y extrae ÚNICAMENTE el texto del contenido principal del documento. IMPORTANTE:\n' +
+                      '- Realiza una transcripción EXACTA del texto, manteniendo la ortografía original\n' +
+                      '- NO corrijas errores ortográficos ni gramaticales\n' +
+                      '- NUNCA alteres mayúsculas o minúsculas - transcribe EXACTAMENTE como aparece cada letra\n' +
+                      '- EXTREMADAMENTE IMPORTANTE - Presta ESPECIAL ATENCIÓN a:\n' +
+                      '  * Números de identificación (cédulas, NIT, etc.) - DEBEN ser transcritos con 100% de precisión\n' +
+                      '  * Números de documentos legales y referencias\n' +
+                      '  * Direcciones físicas completas\n' +
+                      '  * Cualquier secuencia numérica o alfanumérica\n' +
+                      '  * FECHAS en cualquier formato (DD/MM/AAAA, texto, etc.)\n' +
+                      '  * Uso de mayúsculas y minúsculas en cada palabra\n\n' +
+                      'IGNORA COMPLETAMENTE los siguientes elementos:\n' +
+                      '- Firmas sobrepuestas sobre nombres o texto\n' +
+                      '- Sellos o timbres\n' +
+                      '- Números de página\n' +
+                      '- Membretes o encabezados institucionales\n' +
+                      '- Números de folio o registro\n' +
+                      '- Marcas de agua\n' +
+                      '- Firmas y sus textos asociados\n' +
+                      '- Cualquier anotación manuscrita sobrepuesta\n\n' +
+                      'Enfócate en extraer:\n' +
+                      '- El texto principal del documento\n' +
+                      '- Cláusulas y contenido sustancial\n' +
+                      '- Información relevante del cuerpo del documento\n' +
+                      '- TODOS los números de identificación y direcciones exactamente como aparecen\n' +
+                      '- TODAS las fechas manteniendo su formato original\n\n' +
+                      'REGLAS CRÍTICAS:\n' +
+                      '- Si hay una firma sobrepuesta sobre un nombre, IGNORA la firma y transcribe el nombre\n' +
+                      '- Si hay un número de identificación, asegúrate de transcribirlo DÍGITO por DÍGITO\n' +
+                      '- Si hay texto tachado pero legible, transcríbelo e indica que está tachado\n' +
+                      '- Si hay texto subrayado, transcríbelo sin indicar el subrayado\n' +
+                      '- Si un texto está parcialmente legible, transcribe SOLO lo que puedas ver con certeza\n' +
+                      '- NUNCA intentes "completar" o "adivinar" partes faltantes del texto\n\n' +
+                      'Devuelve SOLO el texto extraído, sin comentarios adicionales ni explicaciones.\n' +
+                      'RECUERDA: \n' +
+                      '- La transcripción debe ser EXACTAMENTE como aparece en el documento\n' +
+                      '- NO cambies NINGUNA mayúscula por minúscula o viceversa\n' +
+                      '- NO omitas ni modifiques NINGÚN número de identificación, dirección o fecha\n' +
+                      '- MEJOR OMITIR que INVENTAR - si no estás 100% seguro, no lo incluyas'
               },
               {
                 type: 'image_url',

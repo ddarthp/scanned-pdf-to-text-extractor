@@ -36,7 +36,12 @@ export class OllamaService {
       
       const response = await this.ollama.generate({
         model: model,
-        prompt: 'Analiza esta imagen y extrae ÚNICAMENTE el texto del contenido principal del documento. IMPORTANTE:\n' +
+        prompt: 'REGLAS ABSOLUTAS:\n' +
+               '- NUNCA inventes o agregues información que no esté en el documento\n' +
+               '- NUNCA completes datos parciales o ilegibles\n' +
+               '- Si no puedes leer algo con 100% de certeza, omítelo\n' +
+               '- NO hagas suposiciones sobre el contenido\n\n' +
+               'Analiza esta imagen y extrae ÚNICAMENTE el texto del contenido principal del documento. IMPORTANTE:\n' +
                '- Realiza una transcripción EXACTA del texto, manteniendo la ortografía original\n' +
                '- NO corrijas errores ortográficos ni gramaticales\n' +
                '- NUNCA alteres mayúsculas o minúsculas - transcribe EXACTAMENTE como aparece cada letra\n' +
@@ -66,12 +71,15 @@ export class OllamaService {
                '- Si hay una firma sobrepuesta sobre un nombre, IGNORA la firma y transcribe el nombre\n' +
                '- Si hay un número de identificación, asegúrate de transcribirlo DÍGITO por DÍGITO\n' +
                '- Si hay texto tachado pero legible, transcríbelo e indica que está tachado\n' +
-               '- Si hay texto subrayado, transcríbelo sin indicar el subrayado\n\n' +
+               '- Si hay texto subrayado, transcríbelo sin indicar el subrayado\n' +
+               '- Si un texto está parcialmente legible, transcribe SOLO lo que puedas ver con certeza\n' +
+               '- NUNCA intentes "completar" o "adivinar" partes faltantes del texto\n\n' +
                'Devuelve SOLO el texto extraído, sin comentarios adicionales ni explicaciones.\n' +
                'RECUERDA: \n' +
                '- La transcripción debe ser EXACTAMENTE como aparece en el documento\n' +
                '- NO cambies NINGUNA mayúscula por minúscula o viceversa\n' +
-               '- NO omitas ni modifiques NINGÚN número de identificación, dirección o fecha',
+               '- NO omitas ni modifiques NINGÚN número de identificación, dirección o fecha\n' +
+               '- MEJOR OMITIR que INVENTAR - si no estás 100% seguro, no lo incluyas',
         images: [base64Image],
         stream: false
       });
