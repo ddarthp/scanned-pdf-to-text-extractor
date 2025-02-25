@@ -9,12 +9,20 @@ services:
     ports:
       - "3080:3080"
     volumes:
-      - ./uploads:/usr/src/app/uploads
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/dist
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
     env_file:
       - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - extractor-network
+    command: npm run dev
 
 networks:
   extractor-network:
-    driver: bridge 
+    driver: bridge

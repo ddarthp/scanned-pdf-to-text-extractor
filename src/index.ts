@@ -9,5 +9,7 @@ app.use('/api', fileRoutes);
 
 // Iniciar servidor
 app.listen(port, () => {
+  console.log('OLLAMA_HOST: ', process.env.OLLAMA_HOST);
+  console.log('DEFAULT_MODEL: ', process.env.DEFAULT_MODEL);
   console.log(`Servidor corriendo en http://localhost:${port}`);
 }); 
